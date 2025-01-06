@@ -5,6 +5,12 @@ import GUI from "lil-gui";
 
 const gui = new GUI();
 
+// Values
+const houseValues = {
+	width: 4,
+	height: 2.5,
+};
+
 // Canvas & Scene
 const canvas = document.querySelector("canvas.webgl");
 const scene = new THREE.Scene();
@@ -16,6 +22,22 @@ const ground = new THREE.Mesh(
 );
 ground.rotation.x = -Math.PI * 0.5;
 scene.add(ground);
+
+// House
+const house = new THREE.Group();
+scene.add(house);
+
+// Walls
+const walls = new THREE.Mesh(
+	new THREE.BoxGeometry(
+		houseValues.width,
+		houseValues.height,
+		houseValues.width
+	),
+	new THREE.MeshStandardMaterial()
+);
+walls.position.y = houseValues.height / 2;
+house.add(walls);
 
 // Lights
 
