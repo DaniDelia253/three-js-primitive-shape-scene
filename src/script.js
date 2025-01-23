@@ -8,7 +8,8 @@ const gui = new GUI();
 // Values
 const houseValues = {
 	width: 4,
-	height: 2.5,
+	wallHeight: 2.5,
+	roofHeight: 1.5,
 };
 
 // Canvas & Scene
@@ -17,7 +18,7 @@ const scene = new THREE.Scene();
 
 // Ground
 const ground = new THREE.Mesh(
-	new THREE.PlaneGeometry(25, 25),
+	new THREE.PlaneGeometry(20, 20, 100, 100),
 	new THREE.MeshStandardMaterial()
 );
 ground.rotation.x = -Math.PI * 0.5;
@@ -31,13 +32,22 @@ scene.add(house);
 const walls = new THREE.Mesh(
 	new THREE.BoxGeometry(
 		houseValues.width,
-		houseValues.height,
+		houseValues.wallHeight,
 		houseValues.width
 	),
 	new THREE.MeshStandardMaterial()
 );
-walls.position.y = houseValues.height / 2;
+walls.position.y = houseValues.wallHeight / 2;
 house.add(walls);
+
+// Roof
+const roof = new THREE.Mesh(
+	new THREE.ConeGeometry(3.5, houseValues.roofHeight, 4),
+	new THREE.MeshStandardMaterial()
+);
+roof.position.y += houseValues.wallHeight + houseValues.roofHeight / 2;
+roof.rotation.y = Math.PI * 0.25; //The axis is y (the vertical axis) and the amount is Math.PI * 0.25 which is 1/8 of a circle:
+house.add(roof);
 
 // Lights
 
