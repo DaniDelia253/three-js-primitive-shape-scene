@@ -3,13 +3,21 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Timer } from "three/addons/misc/Timer.js";
 import GUI from "lil-gui";
 
-const gui = new GUI();
+// const gui = new GUI();
+const randomBetween = (min, max) => Math.random() * (max - min) + min;
 
 // Values
 const houseValues = {
 	width: 4,
 	wallHeight: 2.5,
 	roofHeight: 1.5,
+};
+
+const treeValues = {
+	minHeight: 3,
+	maxHeight: 5,
+	minRadius: 0.1,
+	maxRadius: 0.45,
 };
 
 // Canvas & Scene
@@ -48,6 +56,39 @@ const roof = new THREE.Mesh(
 roof.position.y += houseValues.wallHeight + houseValues.roofHeight / 2;
 roof.rotation.y = Math.PI * 0.25; //The axis is y (the vertical axis) and the amount is Math.PI * 0.25 which is 1/8 of a circle:
 house.add(roof);
+
+// Trees
+const trunkMaterial = new THREE.MeshStandardMaterial();
+const leafMaterial = new THREE.MeshStandardMaterial();
+
+const trees = new THREE.Group();
+scene.add(trees);
+
+for (let i = 0; i < 20; i++) {
+	const radius = randomBetween(treeValues.minRadius, treeValues.maxRadius);
+	const radiusDifference = Math.random() * 0.15;
+	const trunkheight = randomBetween(
+		treeValues.minHeight,
+		treeValues.maxHeight
+	);
+	const trunkGeometry = new THREE.CylinderGeometry(
+		radius - radiusDifference,
+		radius + radiusDifference,
+		trunkheight,
+		10
+	);
+
+	const angle = Math.random() * Math.PI * 2;
+	const distributionRadius = houseValues.width + Math.random() * 5; //TODO: this may need to get smaller when the alpha map is applied ot the borders of the ground
+	const x = Math.sin(angle) * distributionRadius;
+	const z = Math.cos(angle) * distributionRadius;
+	const y = trunkheight / 2;
+
+	const tree = new THREE.Mesh(trunkGeometry, trunkMaterial);
+	tree.position.set(x, y, z);
+
+	trees.add(tree);
+}
 
 // Lights
 
